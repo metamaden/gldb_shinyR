@@ -5,7 +5,7 @@ library(pool)
 library(ggplot2)
 
 # functions for server
-source("browseR_functions.R")
+source("shinyfunctions2.R")
 
 # global pool connection to be referenced 
 {try({
@@ -33,12 +33,12 @@ ui <- fluidPage(theme=shinytheme("cerulean"),
                      helpText(h3("Database Connection")),
                      helpText("This tab shows connection details",paste("Grady Lab Database shinyR Browser")),
                      helpText(h4("Enter your connection info:")),
-                     textInput("dbname", label = h5("DB Name for Connection"), value = ""),
-                     textInput("hostname", label = h5("Host Name"), value = ""),
-                     textInput("username", label = h5("User Name"), value = ""),
-                     passwordInput("password", label = h5("Password"), value = ""),
-                     textInput("dbtitle", label = h5("Query Database Title"), value = ""),
-                     numericInput("portnumber", label = h5("Port Number"), value = 0),
+                     textInput("dbname", label = h5("DB Name for Connection"), value = "glcolon"),
+                     textInput("hostname", label = h5("Host Name"), value = "mydb"),
+                     textInput("username", label = h5("User Name"), value = "smaden"),
+                     passwordInput("password", label = h5("Password"), value = "glpassword"),
+                     textInput("dbtitle", label = h5("Query Database Title"), value = "gldata"),
+                     numericInput("portnumber", label = h5("Port Number"), value = 32081),
                      actionButton("dbconnect", "Connect to Database")
     ),
     conditionalPanel(condition="input.conditionedPanels==2",
@@ -170,16 +170,16 @@ server <- function(input, output) {
   viewtable <- observeEvent(input$viewtable,{
     tablequery <- paste0("SELECT * FROM ",input$dbtitle,".",input$tableoptions,";")
     # display tables output
+    tableload <-as.data.frame(dbGetQuery(db.pool,tablequery))
     output$dbtables <- renderDataTable(
-      as.data.frame(dbGetQuery(db.pool,tablequery))
+      tableload
     )
     
     # enable download for current selected table in csv format
-    output$downloadtable <- downloadHandler( 
-      filename = paste(input$tableoptions,".csv"),
-      content = function(filename) { # content of table to download
-        tabletowrite <- as.data.frame(dbGetQuery(db.pool(),paste0("SELECT * FROM ",input$dbtitle,".",input$tableoptions,";")))
-        write.table(tabletowrite,filename,sep=",",row.names=FALSE)
+    output$downloadtable <- downloadHandler(
+      filename = function() { paste0(input$tableoptions,'.csv') },
+      content = function(file) {
+        write.csv(tableload, file)
       }
     )
     
@@ -199,6 +199,12 @@ server <- function(input, output) {
       currentquerytable
     )
     write.csv(currentquerytable,"currentquerytable.csv")
+    
+    output$downloadquery <- downloadHandler( 
+      filename = function() {paste0(input$tableoptions,"_query",".csv") },
+      content = function(file){write.csv(currentquerytable,file)}
+    )
+    
   })
   
   # generate variable options in data analysis tab from tables and query
@@ -254,5 +260,3 @@ server <- function(input, output) {
 }
 
 shinyApp(ui = ui, server = server)
-
-
