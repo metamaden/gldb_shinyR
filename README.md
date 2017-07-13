@@ -1,2 +1,4 @@
 # gldb_shinyR
-GLDB shiny app
+Grady Lab Database shiny R BrowseR. 
+
+App for querying and downloading data from the grady lab postgreSQL database.
