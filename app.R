@@ -5,7 +5,7 @@ library(pool)
 library(ggplot2)
 
 # functions for server
-source("shinyfunctions2.R")
+source("browseR_functions.R")
 
 # global pool connection to be referenced 
 {try({
