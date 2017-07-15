@@ -179,7 +179,7 @@ server <- function(input, output) {
     output$downloadtable <- downloadHandler(
       filename = function() { paste0(input$tableoptions,'.csv') },
       content = function(file) {
-        write.csv(tableload, file)
+        write.csv(tableload, file,row.names=FALSE)
       }
     )
     
@@ -198,11 +198,11 @@ server <- function(input, output) {
     output$dbquery <- renderDataTable(
       currentquerytable
     )
-    write.csv(currentquerytable,"currentquerytable.csv")
+    write.csv(currentquerytable,"currentquerytable.csv",row.names=FALSE)
     
     output$downloadquery <- downloadHandler( 
       filename = function() {paste0(input$tableoptions,"_query",".csv") },
-      content = function(file){write.csv(currentquerytable,file)}
+      content = function(file){write.csv(currentquerytable,file,row.names=FALSE)}
     )
     
   })
