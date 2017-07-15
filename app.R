@@ -38,7 +38,7 @@ ui <- fluidPage(theme=shinytheme("cerulean"),
                      textInput("username", label = h5("User Name"), value = ""),
                      passwordInput("password", label = h5("Password"), value = ""),
                      textInput("dbtitle", label = h5("Query Database Title"), value = ""),
-                     numericInput("portnumber", label = h5("Port Number"), value = ),
+                     numericInput("portnumber", label = h5("Port Number"), value = 0),
                      actionButton("dbconnect", "Connect to Database")
     ),
     conditionalPanel(condition="input.conditionedPanels==2",
