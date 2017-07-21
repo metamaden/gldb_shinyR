@@ -14,7 +14,7 @@ source("browseR_functions.R")
                           user="",
                           password="",
                           port="");
-  ctable <- as.data.frame(dbGetQuery(db.pool,paste0("SELECT * FROM ",dbtitle,".colonoscopies;")))
+  colonoscopies <- as.data.frame(dbGetQuery(db.pool,paste0("SELECT * FROM ",dbtitle,".colonoscopies;")))
   polyps <- as.data.frame(dbGetQuery(db.pool,paste0("SELECT * FROM ",dbtitle,".polyps;")))
   patients <- as.data.frame(dbGetQuery(db.pool,paste0("SELECT * FROM ",dbtitle,".patients;")))
   analysistable <- c()
@@ -150,8 +150,8 @@ server <- function(input, output) {
     })
     
     # ui ouput for encounter pathology
-    ctable <- as.data.frame(dbGetQuery(db.pool,paste0("SELECT * FROM ",input$dbtitle,".colonoscopies;")))
-    pathoptionlist <- unique(levels(as.factor(ctable$pathology_encounter)))
+    colonoscopies <<- as.data.frame(dbGetQuery(db.pool,paste0("SELECT * FROM ",input$dbtitle,".colonoscopies;")))
+    pathoptionlist <- unique(levels(as.factor(colonoscopies$pathology_encounter)))
     output$encounterpathology <- renderUI({
       selectInput("pathoptions",label=h5("Index Encounter Pathology"),choices=c("no filter",pathoptionlist))
     })
@@ -161,7 +161,7 @@ server <- function(input, output) {
       selectInput("tabledata",label="Select a Dataset",choices=c(tableoptions,"current query"))
     })
     
-    ctable <<- as.data.frame(dbGetQuery(db.pool,paste0("SELECT * FROM ",input$dbtitle,".colonoscopies;")))
+    
     polyps <<- as.data.frame(dbGetQuery(db.pool,paste0("SELECT * FROM ",input$dbtitle,".polyps;")))
     patients <<- as.data.frame(dbGetQuery(db.pool,paste0("SELECT * FROM ",input$dbtitle,".patients;")))
   })
