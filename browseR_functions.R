@@ -30,11 +30,11 @@ queryselected <- function(dbtitle,
                           queryoptions){
 
   cage <- c()
-  for(i in 1:nrow(ctable)){
-    cage[i] <- as.numeric(age(patients[patients$patient_id==ctable[i,]$patient_id,]$dob,
-                              ctable[i,]$encounter_date))
+  for(i in 1:nrow(colonoscopies)){
+    cage[i] <- as.numeric(age(patients[patients$patient_id==colonoscopies[i,]$patient_id,]$dob,
+                              colonoscopies[i,]$encounter_date))
   }
-  ctable$age <- cage
+  colonoscopies$age <- cage
   
   #=================
   # apply filters
@@ -43,10 +43,10 @@ queryselected <- function(dbtitle,
   min.index.age <- as.numeric(ageindex1)
   max.index.age <- as.numeric(ageindex2)
   
-  c1pat <- ctable[ctable$index==TRUE
-                  &  min.index.age <= ctable$age
-                  & ctable$age <= max.index.age,]$patient_id
-  c1 <- ctable[ctable$patient_id %in% c1pat,]
+  c1pat <- colonoscopies[colonoscopies$index==TRUE
+                  &  min.index.age <= colonoscopies$age
+                  & colonoscopies$age <= max.index.age,]$patient_id
+  c1 <- colonoscopies[colonoscopies$patient_id %in% c1pat,]
   
   # npolyps criteria
   min.indexpolyp <- as.numeric(npolypsindex1)
